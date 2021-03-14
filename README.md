@@ -11,6 +11,7 @@ Everything will be containerized and run with docker
 Based on:
 - https://www.kostal-solar-electric.com/en-gb/products/accessories/-/media/document-library-folder---kse/2020/12/15/13/45/ksem_ba_en.pdf
 - https://github.com/kilianknoll/kostal-ksem
+- https://www.msxfaq.de/sonst/iot/kostal15.htm
 
 # Disclaimer
 Warning
