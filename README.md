@@ -1,5 +1,10 @@
-# ksem
-Reading multiple registers from KSEM
+# What is this
+- Reading multiple registers from KSEM
+- Reading multiple dxindexes from Inverters (tested with Piko15)
+
+# Goals
+This repo is _WORK IN PROGRESS_ and will serve as a datascrapper for an influx db.
+Everything will be containerized and run with docker
 
 # Docs
 
