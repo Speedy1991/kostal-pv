@@ -4,7 +4,7 @@ Reading Registries from KSEM
 # Docs
 
 Based on:
-- https://www.kostal-solar-electric.com/de-de/download/-/media/document-library-folder---kse/2019/05/09/13/57/ba_kostal_interface_ksem---201905.pdf
+- https://www.kostal-solar-electric.com/en-gb/products/accessories/-/media/document-library-folder---kse/2020/12/15/13/45/ksem_ba_en.pdf
 - https://github.com/kilianknoll/kostal-ksem
 
 # Disclaimer
