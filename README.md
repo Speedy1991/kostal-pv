@@ -1,5 +1,5 @@
 # ksem
-Reading Registries from KSEM
+Reading multiple registers from KSEM
 
 # Docs
 
