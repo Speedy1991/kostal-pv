@@ -1,2 +1,3 @@
 pymodbus
 requests
+influxdb-client[ciso]
