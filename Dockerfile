@@ -7,5 +7,3 @@ WORKDIR /app
 ADD requirements.txt .
 RUN pip install -U -r requirements.txt
 ADD . .
-
-RUN python main.py

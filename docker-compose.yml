@@ -2,7 +2,8 @@ version: "3"
 
 services:
   influxdb:
-    image: influxdb:2.0
+    image: influxdb:2.0.4
+    # For RPI use this image: arm64v8/influxdb:2.0.4
     ports:
       - 127.0.0.1:8086:8086
     environment:
@@ -12,3 +13,7 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=org
       - DOCKER_INFLUXDB_INIT_BUCKET=PV
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=influxdbtoken
+
+  data-scrapper:
+    build: .
+    run: python main.py
