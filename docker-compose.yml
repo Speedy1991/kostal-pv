@@ -16,4 +16,4 @@ services:
 
   data-scrapper:
     build: .
-    run: python main.py
+    command: python main.py
