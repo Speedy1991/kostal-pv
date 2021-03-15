@@ -1,6 +1,7 @@
 from ksem import KSEM
 from piko15 import Piko15
 from influx_client import InfluxClient
+import time
 
 
 def create_points(instance):
@@ -22,9 +23,13 @@ def run():
     inverter = Piko15()
 
     while True:
-        points = [*create_points(ksem), *create_points(inverter)]
-        client.write_points('PV', points)
-        print(f"[{len(points)}] Points written to influxdb")
+        try:
+            points = [*create_points(ksem), *create_points(inverter)]
+            client.write_points('PV', points)
+            print(f"[{len(points)}] Points written to influxdb")
+        except Exception as e:
+            print(e)
+            time.sleep(10)
 
 
 if __name__ == '__main__':
