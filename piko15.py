@@ -52,7 +52,7 @@ class Piko15:
 
     def get_results(self):
         response = requests.get(self.url).json()
-        now = time.time()
+        now = time.time_ns()
         return [
             dict(dxsId=entry['dxsId'], name=DXS_MAPPER[entry['dxsId']], value=entry['value'], ts=now)
             for entry in response['dxsEntries']

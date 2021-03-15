@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  influxdb:
+    image: influxdb:2.0
+    ports:
+      - 127.0.0.1:8086:8086
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=influxdb
+      - DOCKER_INFLUXDB_INIT_PASSWORD=influxdb
+      - DOCKER_INFLUXDB_INIT_ORG=org
+      - DOCKER_INFLUXDB_INIT_BUCKET=PV
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=influxdbtoken

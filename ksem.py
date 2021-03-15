@@ -27,19 +27,19 @@ class KSEM:
 
     def _read_u16_1(self, addr, name, multiplier):
         result = self._read(addr, 1, 71).decode_16bit_uint()
-        return name, addr, result * multiplier, time.time()
+        return name, addr, result * multiplier, time.time_ns()
 
     def _read_int32(self, addr, name, multiplier):
         result = self._read(addr, 2, 71).decode_32bit_int()
-        return name, addr, result * multiplier, time.time()
+        return name, addr, result * multiplier, time.time_ns()
 
     def _read_uint64(self, addr, name, multiplier):
         result = self._read(addr, 4, 71).decode_64bit_uint()
-        return name, addr, result * multiplier, time.time()
+        return name, addr, result * multiplier, time.time_ns()
 
     def _read_u32(self, addr, name, multiplier):
         result = self._read(addr, 2, 71).decode_32bit_uint()
-        return name, addr, result * multiplier, time.time()
+        return name, addr, result * multiplier, time.time_ns()
 
     def terminate(self):
         self._client.close()
