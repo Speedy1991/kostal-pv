@@ -1,0 +1,13 @@
+[Unit]
+Description=Influx data scrapper for pv
+After=multi-user.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/git/kostal-pv
+ExecStart=/usr/bin/python3 /home/pi/git/kostal-pv/main.py
+Environment=PYTHONUNBUFFERED=1
+User=pi
+
+[Install]
+WantedBy=multi-user.target

@@ -5,38 +5,41 @@ from config import config
 
 
 DXS = [
-    dict(NAME="DC VOLTAGE 1", ID=33555202),
-    dict(NAME="DC AMPERE 1", ID=33555201),
-    dict(NAME="DC POWER 1", ID=33555203),
+    (dict(ac_dc="dc", type="voltage", phase="1"), 33555202),
+    (dict(ac_dc="dc", type="ampere", phase="1"), 33555201),
+    (dict(ac_dc="dc", type="power", phase="1"), 33555203),
 
-    dict(NAME="DC VOLTAGE 2", ID=33555458),
-    dict(NAME="DC AMPERE 2", ID=33555457),
-    dict(NAME="DC POWER 2", ID=33555459),
+    (dict(ac_dc="dc", type="voltage", phase="2"), 33555458),
+    (dict(ac_dc="dc", type="ampere", phase="2"), 33555457),
+    (dict(ac_dc="dc", type="power", phase="2"), 33555459),
 
-    dict(NAME="DC VOLTAGE 3", ID=33555714),
-    dict(NAME="DC AMPERE 3", ID=33555713),
-    dict(NAME="DC POWER 3", ID=33555715),
+    (dict(ac_dc="dc", type="voltage", phase="3"), 33555714),
+    (dict(ac_dc="dc", type="ampere", phase="3"), 33555713),
+    (dict(ac_dc="dc", type="power", phase="3"), 33555715),
 
-    dict(NAME="OUTPUT POWER", ID=67109120),
-    dict(NAME="GRID FREQUENCY", ID=67110400),
-    dict(NAME="COS", ID=67110656),
-    dict(NAME="LIMITATION ON", ID=67110144),
+    (dict(name="output", type="power"), 67109120),
+    (dict(name="grid frequency"), 67110400),
+    (dict(name="cos"), 67110656),
+    (dict(name="total input", ac_dc="dc", type="power"), 33556736),
+    (dict(name="statistic day", type="kWh"), 251658754),
+    (dict(name="statistic total", type="kwh"), 251658753),
+    (dict(name="operation time", type="hour"), 251658496),
 
-    dict(NAME="AC VOLTAGE 1", ID=67109378),
-    dict(NAME="AC AMPERE 1", ID=67109377),
-    dict(NAME="AC POWER 1", ID=67109379),
+    (dict(ac_dc="ac", type="voltage", phase="1"), 67109378),
+    (dict(ac_dc="ac", type="ampere", phase="1"), 67109377),
+    (dict(ac_dc="ac", type="power", phase="1"), 67109379),
 
-    dict(NAME="AC VOLTAGE 2", ID=67109634),
-    dict(NAME="AC AMPERE 2", ID=67109633),
-    dict(NAME="AC POWER 2", ID=67109635),
+    (dict(ac_dc="ac", type="voltage", phase="2"), 67109634),
+    (dict(ac_dc="ac", type="ampere", phase="2"), 67109633),
+    (dict(ac_dc="ac", type="power", phase="2"), 67109635),
 
-    dict(NAME="AC VOLTAGE 3", ID=67109890),
-    dict(NAME="AC AMPERE 3", ID=67109889),
-    dict(NAME="AC POWER 3", ID=67109891),
+    (dict(ac_dc="ac", type="voltage", phase="3"), 67109890),
+    (dict(ac_dc="ac", type="ampere", phase="3"), 67109889),
+    (dict(ac_dc="ac", type="power", phase="3"), 67109891),
 ]
 
-DXS_IDS = [v['ID'] for v in DXS]
-DXS_MAPPER = {v['ID']: v['NAME'] for v in DXS}
+DXS_IDS = [v[1] for v in DXS]
+DXS_MAPPER = {v[1]: v[0] for v in DXS}
 
 
 class Piko15:
@@ -54,7 +57,7 @@ class Piko15:
         response = requests.get(self.url).json()
         now = time.time_ns()
         return [
-            dict(dxsId=entry['dxsId'], name=DXS_MAPPER[entry['dxsId']], value=entry['value'], ts=now)
+            dict(value=entry['value'], name=" ".join(DXS_MAPPER[entry['dxsId']].values()), ts=now, tags=DXS_MAPPER[entry['dxsId']])
             for entry in response['dxsEntries']
         ]
 
