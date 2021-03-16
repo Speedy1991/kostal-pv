@@ -15,14 +15,16 @@ class InfluxClient:
         self.write_api = self.client.write_api(write_options=ASYNCHRONOUS)
 
     @classmethod
-    def create_idb_point(cls, measurement_name, tags, fields, ts=None):
+    def create_idb_point(cls, tags, fields, ts=None, measurement_name=None):
+        if measurement_name is None:
+            measurement_name = " ".join(tags.values()).replace(" ", "_").lower()
         if ts is None:
             ts = time.time_ns()
         p = Point(measurement_name)
-        for tag, value in tags:
-            p.tag(tag, value)
-        for field, value in fields:
-            p.field(field, value)
+        for tag, value in tags.items():
+            p.tag(tag.lower().replace(" ", "_"), value)
+        for field, value in fields.items():
+            p.field(field.lower().replace(" ", "_"), value)
         p.time(ts)
         return p
 

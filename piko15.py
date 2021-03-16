@@ -38,7 +38,6 @@ DXS = [
     (dict(ac_dc="ac", type="power", phase="3"), 67109891),
 ]
 
-DXS_IDS = [v[1] for v in DXS]
 DXS_MAPPER = {v[1]: v[0] for v in DXS}
 
 
@@ -50,14 +49,14 @@ class Piko15:
 
     def __init__(self):
         url = f"http://{config['PIKO15']['IP']}/api/dxs.json"
-        params = "?dxsEntries=" + "&dxsEntries=".join(map(str, DXS_IDS))
+        params = "?dxsEntries=" + "&dxsEntries=".join(map(str, [v[1] for v in DXS]))
         self.url = url + params
 
     def get_results(self):
         response = requests.get(self.url).json()
         now = time.time_ns()
         return [
-            dict(value=entry['value'], name=" ".join(DXS_MAPPER[entry['dxsId']].values()), ts=now, tags=DXS_MAPPER[entry['dxsId']])
+            dict(value=entry['value'], ts=now, tags=DXS_MAPPER[entry['dxsId']])
             for entry in response['dxsEntries']
         ]
 

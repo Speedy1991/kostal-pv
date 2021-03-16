@@ -6,13 +6,18 @@ import time
 
 def create_points(instance):
     points = []
+    meta_tags = instance.tags
     for result in instance.get_results():
-        meta_tags = [(k, v) for k, v in instance.tags.items()]
-        point_tags = [(k, v) for k, v in result['tags'].items()]
+        point_tags = result['tags']
+        point_tags.update(meta_tags)
+        fields = dict(value=result['value'])
+        fields.update({
+            '_'.join(point_tags.values()): result['value']
+        })
         point = InfluxClient.create_idb_point(
-            measurement_name=result['name'],
-            tags=[*meta_tags, *point_tags],
-            fields=[('value', result['value'])],
+            measurement_name=result.get('name', None),
+            tags=point_tags,
+            fields=fields,
             ts=result['ts']
         )
         points.append(point)
