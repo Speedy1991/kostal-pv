@@ -1,6 +1,8 @@
 [Unit]
 Description=Influx data scrapper for pv
 After=multi-user.target
+StartLimitIntervalSec=400
+StartLimitBurst=20
 
 [Service]
 Type=simple
@@ -8,6 +10,8 @@ WorkingDirectory=/home/pi/git/kostal-pv
 ExecStart=/usr/bin/python3 /home/pi/git/kostal-pv/main.py
 Environment=PYTHONUNBUFFERED=1
 User=pi
+Restart=on-failure
+RestartSec=60
 
 [Install]
 WantedBy=multi-user.target
