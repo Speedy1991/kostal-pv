@@ -1,5 +1,5 @@
-import time
 import json
+import time
 
 from pymodbus.client.sync import ModbusTcpClient
 from pymodbus.constants import Endian
@@ -35,79 +35,80 @@ class KSEM:
     def terminate(self):
         self._client.close()
 
-    def get_results(self):
+    def get_results(self, ts=None):
+        ts = ts or time.time_ns()
         results = []
-        for addr, tags, multiplier in [
-            (0, dict(type="active", unit="power", option="purchase"), 0.1),
-            (2, dict(type="active", unit="power", option="sell"), 0.1),
-            (4, dict(type="reactive", unit="power", option="purchase"), 0.1),
-            (6, dict(type="reactive", unit="power", option="sell"), 0.1),
-            (16, dict(type="apparent", unit="power", option="purchase"), 0.1),
-            (18, dict(type="apparent", unit="power", option="sell"), 0.1),
-            (26, dict(type="supply frequency",), 0.001),
-            (40, dict(type="active", unit="power", option="purchase", phase="1"), 0.1),
-            (42, dict(type="active", unit="power", option="sell", phase="1"), 0.1),
-            (44, dict(type="reactive", unit="power", option="purchase", phase="1"), 0.1),
-            (46, dict(type="reactive", unit="power", option="sell", phase="1"), 0.1),
-            (56, dict(type="apparent", unit="power", option="purchase", phase="1"), 0.1),
-            (58, dict(type="apparent", unit="power", option="sell", phase="1"), 0.1),
-            (60, dict(type="current", phase="1"), 0.001),
-            (62, dict(type="voltage", phase="1"), 0.001),
-            (64, dict(type="power factor", phase="1"), 0.001),
-            (80, dict(type="active", unit="power", option="purchase", phase="2"), 0.1),
-            (82, dict(type="active", unit="power", option="sell", phase="2"), 0.1),
-            (84, dict(type="reactive", unit="power", option="purchase", phase="2"), 0.1),
-            (86, dict(type="reactive", unit="power", option="sell", phase="2"), 0.1),
-            (96, dict(type="apparent", unit="power", option="purchase", phase="2"), 0.1),
-            (98, dict(type="apparent", unit="power", option="sell", phase="2"), 0.1),
-            (100, dict(type="current", phase="2"), 0.001),
-            (102, dict(type="voltage", phase="2"), 0.001),
-            (120, dict(type="active", unit="power", option="purchase", phase="3"), 0.1),
-            (122, dict(type="active", unit="power", option="sell", phase="3"), 0.1),
-            (124, dict(type="reactive", unit="power", option="purchase", phase="3"), 0.1),
-            (126, dict(type="reactive", unit="power", option="sell", phase="3"), 0.1),
-            (136, dict(type="apparent", unit="power", option="purchase", phase="3"), 0.1),
-            (138, dict(type="apparent", unit="power", option="sell", phase="3"), 0.1),
-            (140, dict(type="current", phase="3"), 0.001),
-            (142, dict(type="voltage", phase="3"), 0.001),
+        for addr, measurement, multiplier in [
+            (0, "active_power_purchase", 0.1),
+            (2, "active_power_sell", 0.1),
+            (4, "reactive_power_purchase", 0.1),
+            (6, "reactive_power_sell", 0.1),
+            (16, "apparent_power_purchase", 0.1),
+            (18, "apparent_power_sell", 0.1),
+            (26, "supply frequency", 0.001),
+            (40, "active_power_purchase_1", 0.1),
+            (42, "active_power_sell_1", 0.1),
+            (44, "reactive_power_purchase_1", 0.1),
+            (46, "reactive_power_sell_1", 0.1),
+            (56, "apparent_power_purchase_1", 0.1),
+            (58, "apparent_power_sell_1", 0.1),
+            (60, "current_1", 0.001),
+            (62, "voltage_1", 0.001),
+            (64, "power factor_1", 0.001),
+            (80, "active_power_purchase_2", 0.1),
+            (82, "active_power_sell_2", 0.1),
+            (84, "reactive_power_purchase_2", 0.1),
+            (86, "reactive_power_sell_2", 0.1),
+            (96, "apparent_power_purchase_2", 0.1),
+            (98, "apparent_power_sell_2", 0.1),
+            (100, "current_2", 0.001),
+            (102, "voltage_2", 0.001),
+            (120, "active_power_purchase_3", 0.1),
+            (122, "active_power_sell_3", 0.1),
+            (124, "reactive_power_purchase_3", 0.1),
+            (126, "reactive_power_sell_3", 0.1),
+            (136, "apparent_power_purchase_3", 0.1),
+            (138, "apparent_power_sell_3", 0.1),
+            (140, "current_3", 0.001),
+            (142, "voltage_3", 0.001),
         ]:
-            results.append(dict(value=self._read_u32(addr, multiplier), ts=time.time_ns(), tags=tags))
+            results.append(dict(value=self._read_u32(addr, multiplier), ts=ts, measurement=measurement))
 
-        for addr, tags in [
-            (24, dict(type="power factor", phase="1")),
-            (104, dict(type="power factor", phase="2")),
-            (144, dict(type="power factor", phase="3"))
+        for addr, measurement in [
+            (24, "power_factor_1"),
+            (104, "power_factor_2"),
+            (144, "power_factor_3")
         ]:
-            results.append(dict(value=self._read_int32(addr, 0.001), ts=time.time_ns(), tags=tags))
+            results.append(dict(value=self._read_int32(addr, 0.001), ts=ts, measurement=measurement))
 
-        for addr, tags in [
-            (512, dict(type="active", unit="energy", option="purchase")),
-            (516, dict(type="active", unit="energy", option="sell")),
-            (520, dict(type="reactive", unit="energy", option="purchase")),
-            (524, dict(type="reactive", unit="energy", option="sell")),
-            (544, dict(type="apparent", unit="energy", option="purchase")),
-            (548, dict(type="apparent", unit="energy", option="sell")),
-            (592, dict(type="active", unit="energy", option="purchase", phase="1")),
-            (596, dict(type="active", unit="energy", option="sell", phase="1")),
-            (600, dict(type="reactive", unit="energy", option="purchase", phase="1")),
-            (604, dict(type="reactive", unit="energy", option="sell", phase="1")),
-            (624, dict(type="apparent", unit="energy", option="purchase", phase="1")),
-            (628, dict(type="apparent", unit="energy", option="sell", phase="1")),
-            (672, dict(type="active", unit="energy", option="purchase", phase="2")),
-            (676, dict(type="active", unit="energy", option="sell", phase="2")),
-            (680, dict(type="reactive", unit="energy", option="purchase", phase="2")),
-            (684, dict(type="reactive", unit="energy", option="sell", phase="2")),
-            (704, dict(type="apparent", unit="energy", option="purchase", phase="2")),
-            (708, dict(type="apparent", unit="energy", option="sell", phase="2")),
-            (752, dict(type="active", unit="energy", option="purchase", phase="3")),
-            (756, dict(type="active", unit="energy", option="sell", phase="3")),
-            (760, dict(type="reactive", unit="energy", option="purchase", phase="3")),
-            (764, dict(type="reactive", unit="energy", option="sell", phase="3")),
-            (784, dict(type="apparent", unit="energy", option="purchase", phase="3")),
-            (788, dict(type="apparent", unit="energy", option="sell", phase="3")),
+        for addr, measurement in [
+            (512, "active_energy_purchase"),
+            (516, "active_energy_sell"),
+            (520, "reactive_energy_purchase"),
+            (524, "reactive_energy_sell"),
+            (544, "apparent_energy_purchase"),
+            (548, "apparent_energy_sell"),
+            (592, "active_energy_purchase_1"),
+            (596, "active_energy_sell_1"),
+            (600, "reactive_energy_purchase_1"),
+            (604, "reactive_energy_sell_1"),
+            (624, "apparent_energy_purchase_1"),
+            (628, "apparent_energy_sell_1"),
+            (672, "active_energy_purchase_2"),
+            (676, "active_energy_sell_2"),
+            (680, "reactive_energy_purchase_2"),
+            (684, "reactive_energy_sell_2"),
+            (704, "apparent_energy_purchase_2"),
+            (708, "apparent_energy_sell_2"),
+            (752, "active_energy_purchase_3"),
+            (756, "active_energy_sell_3"),
+            (760, "reactive_energy_purchase_3"),
+            (764, "reactive_energy_sell_3"),
+            (784, "apparent_energy_purchase_3"),
+            (788, "apparent_energy_sell_3"),
 
         ]:
-            results.append(dict(value=self._read_uint64(addr, 0.1), ts=time.time_ns(), tags=tags))
+            results.append(dict(value=self._read_uint64(addr, 0.1), ts=ts, measurement=measurement))
 
         return results
 
