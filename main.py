@@ -31,6 +31,7 @@ def run():
         if len(points) > 0:
             client.write_points('PV New', points)
             print(f"[{len(points)}] Points written to influxdb")
+            time.sleep(1)
 
 
 if __name__ == '__main__':
