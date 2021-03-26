@@ -29,7 +29,7 @@ def run():
         ts = time.time_ns()
         points = [*create_points(ksem, ts), *create_points(inverter, ts)]
         if len(points) > 0:
-            client.write_points('PV New', points)
+            client.write_points('PV', points)
             print(f"[{len(points)}] Points written to influxdb")
             time.sleep(1)
 
